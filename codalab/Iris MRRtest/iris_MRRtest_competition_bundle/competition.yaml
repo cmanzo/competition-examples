@@ -76,18 +76,20 @@ leaderboard:
       leaderboard: *RESULTS
       numeric_format: 4
       rank: 3
+      sort: desc
     Duration:
       label: Duration
       leaderboard: *RESULTS
       numeric_format: 2
       rank: 4
-
+      sort: asc
 
     MRR:
       label: MRR
       leaderboard: *RESULTS
       numeric_format: 3
       rank: 1
+      sort: desc
       computed:                           # The scores that will be used to compute the MRR
           operation: MRR
           fields: set1_score, Duration
@@ -97,6 +99,7 @@ leaderboard:
       leaderboard: *RESULTS
       numeric_format: 3
       rank: 2
+      sort: asc
       computed:                           # The scores that will be used to compute average ranking
           operation: Avg
           fields: set1_score, Duration

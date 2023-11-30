@@ -1,6 +1,7 @@
-# Iris Challenge Example
+# Iris MRRtest Challenge Example
 
-This is a very simple example of competition in 2 phases, with either result or code submission, using an ingestion program.
+This is a modified version of the Iris Challenge, meant for testing the calculation of the mean reciprocal rank (MRR) on the leaderboard metrics.
+The Iris Challenge very simple example of competition in 2 phases, with either result or code submission, using an ingestion program.
 It allows organizers to write a program that received Python classes (not executables) and call them on data loaded with a standard data loader (ehnce the participants do not have to read the input data themselves).
 
 The example uses the well known Iris dataset from Fisher's classic paper (Fisher, 1936).. The data set contains 3 classes of 50 instances each, where each class refers to a type of iris plant. One class is linearly separable from the other 2; the latter are NOT linearly separable from each other.
@@ -12,8 +13,8 @@ The example uses the well known Iris dataset from Fisher's classic paper (Fisher
 
 ### References and credits
 
-R. A. Fisher. The use of multiple measurements in taxonomic problems. Annual Eugenics, 7, Part II, 179-188 (1936). 
-The competition protocol was designed by Isabelle Guyon. 
+R. A. Fisher. The use of multiple measurements in taxonomic problems. Annual Eugenics, 7, Part II, 179-188 (1936).
+The competition protocol was designed by Isabelle Guyon.
 This challenge was generated using ChaLab for Codalab v1.5.
 
 ### Overview
@@ -62,9 +63,9 @@ scoring_program_1.zip	    The program evaluating the solution (same in both phas
 starting_kit_1.zip	    The starting kit to generate sample submissions
 logo.png                    The logo
 competition.yaml            The YAML configuration file
-data.html	            HTML documentation pages	
+data.html	            HTML documentation pages
 evaluation.html		
-overview.html	
+overview.html
 terms.html
 get_starting_kit.html
 ```
@@ -84,7 +85,7 @@ html:
   overview: overview.html
   terms: terms.html
 ```
-2. **Second section**: phases (3 phases in this example)
+2. **Second section**: phases (2 phases in this example)
 ```
 phases:
   0:
@@ -115,21 +116,31 @@ phases:
 3. **Third section**: leaderboard configuration
 ```
 leaderboard:
+  leaderboards:
+    Results: &id001
+    rank: 1
+
   columns:
-    Duration:
-      label: Duration
-      leaderboard: &id001
-        label: Results
-        rank: 1
-      rank: 7
-      sort: desc
     set1_score:               # This is the name of the score returned in score.txt written by the scoring program
       label: Prediction score # This will be the name of the column showing the results
       leaderboard: *id001
       rank: 2
       sort: desc              # Change that to "asc" if you want to sort the score in ascending order
-  leaderboards:
-    Results: *id001
+    Duration:
+      label: Duration
+      leaderboard: *id001
+      rank: 3
+      sort: asc
+    MRR:
+      label: MRR
+      leaderboard: *id001
+      numeric_format: 3
+      rank: 1
+      sort: desc
+        computed:                          # Results is a calculation over the ranks
+            operation: MRR                 # Operation to perform (Avg, MRR)
+            fields: set1_score, Duration   # The scores that will be used to compute the MRR
+
 ```
 In this case, the scoring program writes a file `scores.txt` containing:
 ```
@@ -139,13 +150,13 @@ Duration: 0.123
 
 ### Types of data
 We have several zip files providing data:
-* **Public data**: `input_data_1.zip` is provided to the participants for download in the first phase. 
+* **Public data**: `input_data_1.zip` is provided to the participants for download in the first phase.
 * **Input data**: `input_data_1.zip` is also provided to the submitted code on the Codalab platform.  
 * **Reference data**: `reference_data_1.zip` is the solution to the problem in the 1st phase (occluded to the participants). `reference_data_2.zip` is the solution to the problem in the 2nd phase.
 
 ### Ingestion program
 
-This competition uses an [Ingestion Program](User_Building-an-Ingestion-Program-for-a-Competition). 
+This competition uses an [Ingestion Program](User_Building-an-Ingestion-Program-for-a-Competition).
 
 `ingestion.py` - In this example, datasets are loaded and a class `model.py` supplied by the participants is called to train and test a model.
 
